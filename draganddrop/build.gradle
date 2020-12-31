@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/AndroidLab/draganddrop'
     gitUrl = 'https://github.com/AndroidLab/draganddrop'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.0.1'
 
     developerId = 'ALab'
     developerName = 'Aleksandr Aleksandrov'

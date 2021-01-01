@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btnEasyDrag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:text="Easy Drag"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnReturnBack"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <Button
+        android:id="@+id/btnReturnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:text="Return Back &#38; Frame Hard"
+        app:layout_constraintTop_toBottomOf="@+id/btnEasyDrag"
+        app:layout_constraintBottom_toTopOf="@+id/btnTouchConflict"/>
+
+    <Button
+        android:id="@+id/btnTouchConflict"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:text="Resolve Touch Conflict"
+        app:layout_constraintTop_toBottomOf="@+id/btnReturnBack"
+        app:layout_constraintBottom_toTopOf="@+id/btnClickListener"/>
+
+    <Button
+        android:id="@+id/btnClickListener"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:text="Click Listener"
+        app:layout_constraintTop_toBottomOf="@+id/btnTouchConflict"
+        app:layout_constraintBottom_toTopOf="@+id/btnIntersectionObjects"/>
+
+    <Button
+        android:id="@+id/btnIntersectionObjects"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:text="Intersection Of Objects"
+        app:layout_constraintTop_toBottomOf="@+id/btnClickListener"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

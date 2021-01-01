@@ -2,6 +2,7 @@ package com.a_lab.draganddrop;
 
 import android.app.Activity;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,17 +15,27 @@ public class DragAndDrop {
     private static final int CLICK_TIME = 1000;
 
     private final Activity activity;
-    private final List<View> list_view = new ArrayList<>();
-    private final List<View> list_viewDisableClick = new ArrayList<>();
-    private final HashMap<View, OnClickListener> map_clickListener = new HashMap<>();
+    private final List<View> viewList = new ArrayList<>();
+    private final List<View> viewDisableClickList = new ArrayList<>();
+    private final HashMap<View, OnClickListener> clickListenerMap = new HashMap<>();
     private OnDragAndDropListener onDragAndDropListener;
     private View viewDrag;
     private boolean isFrameHard = false;   //Если жесткие рамки экрана
-    private boolean isDragBack = true;   //Всегда возвращать на исходную позицию
+    private boolean isReturnBack = false;   //Всегда возвращать на исходную позицию
     private long timerClick;
 
     public DragAndDrop(Activity activity) {
+        this(activity, null);
+    }
+
+    public DragAndDrop(Activity activity, View rootView) {
         this.activity = activity;
+
+        //Устанавливаем слушатель touch на root
+        if (rootView == null)
+            activity.findViewById(android.R.id.content).getRootView().setOnTouchListener(touchListenerRoot);
+        else
+            rootView.setOnTouchListener(touchListenerRoot);
     }
 
     //Добавляем объекты target
@@ -40,8 +51,8 @@ public class DragAndDrop {
     //Добавляем объекты target
     public void addViewDrag(View view, boolean canMove, OnClickListener l) {
         //Если в массиве еще нет такой вью
-        if (!list_view.contains(view)) {
-            list_view.add(view);   //Добавляем в список объектов, которые могут пересекаться
+        if (!viewList.contains(view)) {
+            viewList.add(view);   //Добавляем в список объектов, которые могут пересекаться
 
             //Если объект может быть подвижным
             if(canMove) {
@@ -50,7 +61,7 @@ public class DragAndDrop {
 
             //Если на объекте может быть клик
             if(l != null) {
-                map_clickListener.put(view, l);
+                clickListenerMap.put(view, l);
             }
         }
     }
@@ -58,17 +69,22 @@ public class DragAndDrop {
     //Добавить view для которых нужно отключать clickable listener
     public void addViewForResolvingConflictTouch(View view) {
         //Если в массиве еще нет такой вью
-        if (!list_viewDisableClick.contains(view)) {
-            list_viewDisableClick.add(view);   //Добавляем в список объектов, у котрых нужно отключать clickable
+        if (!viewDisableClickList.contains(view)) {
+            viewDisableClickList.add(view);   //Добавляем в список объектов, у котрых нужно отключать clickable
         }
+    }
+
+    //Удалить view для которых нужно отключать clickable listener
+    public void removeViewForResolvingConflictTouch(View view) {
+        viewDisableClickList.remove(view);   //Удаляем из списка объектов, у котрых нужно отключать clickable
     }
 
     private final View.OnTouchListener touchListenerRoot = new View.OnTouchListener() {
         private int screenWidth, screenHeight;
         private float startViewDragX, startViewDragY;
-        private final List<View> list_targetView = new ArrayList<>();
-        private final List<Rect> list_targetRect = new ArrayList<>();
-        private final List<View> list_overlapView = new ArrayList<>();
+        private final List<View> targetViewList = new ArrayList<>();
+        private final List<Rect> targetRectList = new ArrayList<>();
+        private final List<View> overlapViewList = new ArrayList<>();
 
         @Override
         public boolean onTouch(View v, MotionEvent event)
@@ -85,17 +101,17 @@ public class DragAndDrop {
                         startViewDragX = viewDrag.getX();   //Начальная координата итема
                         startViewDragY = viewDrag.getY();   //Начальная координата итема
 
-                        list_targetView.clear();
-                        list_targetRect.clear();
+                        targetViewList.clear();
+                        targetRectList.clear();
 
                         //Перебираем все вьюшки для определения их позиций на экране
-                        for(View targetView : list_view) {
+                        for(View targetView : viewList) {
                             //Если view таргета не равна viewDrag
                             if (targetView != viewDrag) {
                                 Rect targetRect = new Rect();
                                 targetView.getGlobalVisibleRect(targetRect);
-                                list_targetView.add(targetView);   //Записываем view таргета
-                                list_targetRect.add(targetRect);   //Записываем расположение таргета
+                                targetViewList.add(targetView);   //Записываем view таргета
+                                targetRectList.add(targetRect);   //Записываем расположение таргета
                             }
                         }
 
@@ -105,7 +121,7 @@ public class DragAndDrop {
                         //Если время клика равно 0 или текущее время больше чем время клика + 1 сек
                         if (timerClick == 0 || System.currentTimeMillis() > timerClick + CLICK_TIME) {
 
-                            list_overlapView.clear();   //Должно очищаться здесь
+                            overlapViewList.clear();   //Должно очищаться здесь
 
                             float touchX = event.getX();   //Точка касания X
                             float touchY = event.getY();   //Точка касания Y
@@ -115,23 +131,28 @@ public class DragAndDrop {
                             viewDrag.getGlobalVisibleRect(dragRect);
 
                             //Перебираем все ректанглы таргета
-                            for(int i = 0; i < list_targetRect.size(); i++)
+                            for(int i = 0; i < targetRectList.size(); i++)
                             {
-                                View targetView = list_targetView.get(i);   //View таргета
-                                Rect targetRect = list_targetRect.get(i);   //Позиция таргета
+                                View targetView = targetViewList.get(i);   //View таргета
+                                Rect targetRect = targetRectList.get(i);   //Позиция таргета
+
+                                if ( !(targetRect.left > dragRect.right || targetRect.right < dragRect.left)
+                                        && !(targetRect.bottom < dragRect.top || targetRect.top > dragRect.bottom) ) {
+                                    overlapViewList.add(targetView);
+                                }
 
                                 //Если ректанглы объектов НЕ пересекаются по оси X
-                                if (targetRect.left > dragRect.right || targetRect.right < dragRect.left)
+                                /*if (targetRect.left > dragRect.right || targetRect.right < dragRect.left)
                                     break;
 
                                 //Если ректанглы объектов НЕ пересекаются по оси Y
                                 if (targetRect.bottom < dragRect.top || targetRect.top > dragRect.bottom)
-                                    break;
-
-                                list_overlapView.add(targetView);
+                                    break;*/
                             }
 
-                            onDragAndDropListener.onObjectDrag(list_overlapView, viewDrag, viewDrag.getX(), viewDrag.getY());
+                            if (onDragAndDropListener != null)  {
+                                onDragAndDropListener.onObjectDrag(overlapViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
+                            }
 
                             //Если жесткие рамки экрана
                             if (isFrameHard) {
@@ -155,18 +176,21 @@ public class DragAndDrop {
                     case MotionEvent.ACTION_UP:
                         //Если время клика больше 0 и и время клика + 1 сек меньше текущего времени
                         if (timerClick > 0 && timerClick + CLICK_TIME > System.currentTimeMillis()) {
-                            map_clickListener.get(viewDrag).onClick(viewDrag);
+                            clickListenerMap.get(viewDrag).onClick(viewDrag);
                         }
                         else {
                             //Если не было пересечения ни с одним объектом
-                            if (isDragBack) {
+                            if (isReturnBack) {
                                 //Возвращаем объект на стартовое место
                                 viewDrag.setX(startViewDragX);
                                 viewDrag.setY(startViewDragY);
                             }
                         }
 
-                        onDragAndDropListener.onObjectDrop(list_overlapView, viewDrag, viewDrag.getX(), viewDrag.getY());
+                        if (onDragAndDropListener != null)  {
+                            onDragAndDropListener.onObjectDrop(overlapViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
+                        }
+
                         viewDrag = null;
                         timerClick = 0;
                         setClickable(true);
@@ -188,12 +212,16 @@ public class DragAndDrop {
             {
                 case MotionEvent.ACTION_DOWN:
                     //Если вью есть в списке слушателей на клик
-                    if (map_clickListener.containsKey(v)) {
+                    if (clickListenerMap.containsKey(v)) {
                         timerClick = System.currentTimeMillis();   //Запоминаем текущее время прикосновения
                     }
                     setClickable(false);
                     viewDrag = v;
-                    onDragAndDropListener.onObjectTouch(viewDrag, v.getX(), v.getY());
+
+                    if (onDragAndDropListener != null)  {
+                        onDragAndDropListener.onObjectTouch(viewDrag, v.getX(), v.getY());
+                    }
+
                     break;
 
                 case MotionEvent.ACTION_UP:
@@ -207,7 +235,7 @@ public class DragAndDrop {
     //Устанавливаем свойства clickable
     private void setClickable(boolean isClickable) {
         //Перебираем все view
-        for(View view : list_viewDisableClick) {
+        for(View view : viewDisableClickList) {
             view.setClickable(isClickable);
         }
     }
@@ -218,32 +246,20 @@ public class DragAndDrop {
     }
 
     //Возвращать объект на место
-    public void setDragBack(boolean isDragBack) {
-        this.isDragBack = isDragBack;
+    public void setReturnBack(boolean isReturnBack) {
+        this.isReturnBack = isReturnBack;
     }
 
     //Вызываем из класса в котором устанавливаем слушатель
-    public void startListener(DragAndDrop.OnDragAndDropListener l) {
-        //Устанавливаем слушатель touch на root
-        startListener(l , null);
-    }
-
-    //Вызываем из класса в котором устанавливаем слушатель
-    public void startListener(OnDragAndDropListener l, View rootView) {
-        //Устанавливаем слушатель touch на root
-        if (rootView == null)
-            activity.findViewById(android.R.id.content).getRootView().setOnTouchListener(touchListenerRoot);
-        else
-            rootView.setOnTouchListener(touchListenerRoot);
-
+    public void setDragListener(OnDragAndDropListener l) {
         this.onDragAndDropListener = l;
     }
 
     //функция возврата реализуемая в главном классе
     public interface OnDragAndDropListener {
         void onObjectTouch(View viewDrag, float x, float y);
-        void onObjectDrag(List<View> list_overlapView, View viewDrag, float x, float y);
-        void onObjectDrop(List<View> list_overlapView, View viewDrag, float x, float y);
+        void onObjectDrag(List<View> overlapViewList, View viewDrag, float x, float y);
+        void onObjectDrop(List<View> overlapViewList, View viewDrag, float x, float y);
     }
 
     //

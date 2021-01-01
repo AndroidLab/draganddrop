@@ -1,3 +1,15 @@
 <resources>
+
     <string name="app_name">DragAndDrop</string>
+
+    <string name="easy_drag">Just take a colored square and drag it to the desired part of the screen</string>
+    <string name="return_back_and_frame_hard">Check the box \'Return back\' and the colored square will return to where you took it.
+        \n
+        \nCheck the box \'Frame hard\' and the colored square will rest against the edges of the root container.
+    </string>
+    <string name="touch_conflict">If there is an object under the square that has a click listener,
+        it will intercept our touch, check the \'Resolve touch conflict\' box to fix this problem</string>
+    <string name="click_listener">If you need to make a click on an object, the \'DragAndDrop\' action will start with a long click</string>
+    <string name="intersection_objects">Set the listener to \'DragAndDrop\' objects and you will know where the square is and who it intersects with</string>
+
 </resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navGraph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.a_lab.draganddrop.MainFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/actionMainFragmentToEasyDragFragment"
+            app:destination="@id/easyDragFragment" />
+        <action
+            android:id="@+id/actionMainFragmentToReturnBackAndFrameHardFragment"
+            app:destination="@id/returnBackAndFrameHardFragment" />
+        <action
+            android:id="@+id/actionMainFragmentToTouchConflictFragment"
+            app:destination="@id/touchConflictFragment" />
+        <action
+            android:id="@+id/actionMainFragmentToClickListenerFragment"
+            app:destination="@id/clickListenerFragment" />
+        <action
+            android:id="@+id/actionMainFragmentToIintersectionObjectsFragment"
+            app:destination="@id/intersectionObjectsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/easyDragFragment"
+        android:name="com.a_lab.draganddrop.EasyDragFragment"
+        android:label="EasyDragFragment"
+        tools:layout="@layout/fragment_easy_drag">
+    </fragment>
+
+    <fragment
+        android:id="@+id/returnBackAndFrameHardFragment"
+        android:name="com.a_lab.draganddrop.ReturnBackAndFrameHardFragment"
+        android:label="ReturnBackFragment"
+        tools:layout="@layout/fragment_return_back">
+    </fragment>
+
+    <fragment
+        android:id="@+id/touchConflictFragment"
+        android:name="com.a_lab.draganddrop.TouchConflictFragment"
+        android:label="TouchConflictFragment"
+        tools:layout="@layout/fragment_touch_conflict">
+    </fragment>
+
+    <fragment
+        android:id="@+id/clickListenerFragment"
+        android:name="com.a_lab.draganddrop.ClickListenerFragment"
+        android:label="ClickListenerFragment"
+        tools:layout="@layout/fragment_click_listener">
+    </fragment>
+
+    <fragment
+        android:id="@+id/intersectionObjectsFragment"
+        android:name="com.a_lab.draganddrop.IntersectionObjectsFragment"
+        android:label="IntersectionObjectsFragment"
+        tools:layout="@layout/fragment_intersection_objects">
+    </fragment>
+
+</navigation>

@@ -5,13 +5,18 @@ Easy to use drag and drop for android
 
 ![easy_drag](./app/assets/gif/easy_drag.gif)
 
-2. Return back & Frame hard
+2\. Return back & Frame hard
 
+![easy_drag](./app/assets/gif/return_back_and_frame_hard.gif)
 
+3\. Resolve touch conflict
 
-3. Resolve touch conflict
+![easy_drag](./app/assets/gif/touch_conflict.gif)
 
-4. Click listener
+4\. Click listener
 
-5. Intersection of objects
+![easy_drag](./app/assets/gif/click_listener.gif)
 
+5\. Intersection of objects
+
+![easy_drag](./app/assets/gif/intersection_objects.gif)

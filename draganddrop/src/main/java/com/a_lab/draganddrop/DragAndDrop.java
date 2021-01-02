@@ -136,18 +136,11 @@ public class DragAndDrop {
                                 View targetView = targetViewList.get(i);   //View таргета
                                 Rect targetRect = targetRectList.get(i);   //Позиция таргета
 
+                                //Если ректанглы объектов НЕ пересекаются по оси X и Y
                                 if ( !(targetRect.left > dragRect.right || targetRect.right < dragRect.left)
                                         && !(targetRect.bottom < dragRect.top || targetRect.top > dragRect.bottom) ) {
                                     overlapViewList.add(targetView);
                                 }
-
-                                //Если ректанглы объектов НЕ пересекаются по оси X
-                                /*if (targetRect.left > dragRect.right || targetRect.right < dragRect.left)
-                                    break;
-
-                                //Если ректанглы объектов НЕ пересекаются по оси Y
-                                if (targetRect.bottom < dragRect.top || targetRect.top > dragRect.bottom)
-                                    break;*/
                             }
 
                             if (onDragAndDropListener != null)  {

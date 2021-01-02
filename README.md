@@ -1,2 +1,2 @@
 # DragAndDrop
-![til](./app/assets/images/banner.png)
+![til](./app/assets/gif/easy_drag.png)

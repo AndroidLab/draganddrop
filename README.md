@@ -1,2 +1,2 @@
 # DragAndDrop
-![easy_drag](easy_drag.gif)
+![easy_drag](./app/assets/gif/easy_drag.png)

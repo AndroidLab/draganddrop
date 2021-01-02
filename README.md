@@ -20,3 +20,14 @@ Easy to use drag and drop for android
 5\. Intersection of objects
 
 ![easy_drag](./app/assets/gif/intersection_objects.gif)
+
+# To get a Git project into your build:
+
+```
+code block
+```
+
+```php
+//php code
+$foo = new BarClass();
+```

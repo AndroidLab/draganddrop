@@ -1,4 +1,4 @@
-# DragAndDrop
+# DragAndDrop v1.0.1
 Easy to use drag and drop for android
 # Preview
 1\. Eassy drag
@@ -24,10 +24,7 @@ Easy to use drag and drop for android
 # To get a Git project into your build:
 
 ```
-code block
-```
-
-```php
-//php code
-$foo = new BarClass();
+dependencies {
+	        implementation 'io.github.a.lab.develop:draganddrop:1.0.1'
+	}
 ```

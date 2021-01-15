@@ -17,7 +17,7 @@ public class DragAndDrop {
     private final Activity activity;
     private final List<View> viewList = new ArrayList<>();
     private final List<View> viewDisableClickList = new ArrayList<>();
-    private final HashMap<View, OnClickListener> clickListenerMap = new HashMap<>();
+    private final HashMap<View, DragAndDrop.OnClickListener> clickListenerMap = new HashMap<>();
     private OnDragAndDropListener onDragAndDropListener;
     private View viewDrag;
     private boolean isFrameHard = false;   //Если жесткие рамки экрана
@@ -48,8 +48,8 @@ public class DragAndDrop {
         addViewDrag(view, canMove, null);
     }
 
-    //Добавляем объекты target
-    public void addViewDrag(View view, boolean canMove, OnClickListener l) {
+    //Добавляем объект target
+    public void addViewDrag(View view, boolean canMove, DragAndDrop.OnClickListener l) {
         //Если в массиве еще нет такой вью
         if (!viewList.contains(view)) {
             viewList.add(view);   //Добавляем в список объектов, которые могут пересекаться
@@ -64,6 +64,11 @@ public class DragAndDrop {
                 clickListenerMap.put(view, l);
             }
         }
+    }
+
+    //Удаляем объект target
+    public void removeViewDrag(View view) {
+        viewList.remove(view);
     }
 
     //Добавить view для которых нужно отключать clickable listener

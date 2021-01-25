@@ -25,6 +25,6 @@ Easy to use drag and drop for android
 
 ```
 dependencies {
-	        implementation 'io.github.a.lab.develop:draganddrop:1.0.3'
+	        implementation 'io.github.a.lab.develop:draganddrop:1.0.4'
 	}
 ```

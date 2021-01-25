@@ -19,6 +19,7 @@ public class DragAndDrop {
     private final List<View> viewDisableClickList = new ArrayList<>();
     private final HashMap<View, DragAndDrop.OnClickListener> clickListenerMap = new HashMap<>();
     private OnDragAndDropListener onDragAndDropListener;
+    private View viewRoot;
     private View viewDrag;
     private boolean isFrameHard = false;   //Если жесткие рамки экрана
     private boolean isReturnBack = false;   //Всегда возвращать на исходную позицию
@@ -28,14 +29,17 @@ public class DragAndDrop {
         this(activity, null);
     }
 
-    public DragAndDrop(Activity activity, View rootView) {
+    public DragAndDrop(Activity activity, View viewRoot) {
         this.activity = activity;
 
+
         //Устанавливаем слушатель touch на root
-        if (rootView == null)
-            activity.findViewById(android.R.id.content).getRootView().setOnTouchListener(touchListenerRoot);
+        if (viewRoot == null)
+            this.viewRoot = activity.findViewById(android.R.id.content).getRootView();
         else
-            rootView.setOnTouchListener(touchListenerRoot);
+            this.viewRoot = viewRoot;
+
+        this.viewRoot.setOnTouchListener(touchListenerRoot);
     }
 
     //Добавляем объекты target
@@ -149,7 +153,7 @@ public class DragAndDrop {
                             }
 
                             if (onDragAndDropListener != null)  {
-                                onDragAndDropListener.onObjectDrag(overlapViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
+                                onDragAndDropListener.onObjectDrag(viewRoot, overlapViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
                             }
 
                             //Если жесткие рамки экрана
@@ -186,7 +190,7 @@ public class DragAndDrop {
                         }
 
                         if (onDragAndDropListener != null)  {
-                            onDragAndDropListener.onObjectDrop(overlapViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
+                            onDragAndDropListener.onObjectDrop(viewRoot, overlapViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
                         }
 
                         viewDrag = null;
@@ -217,7 +221,7 @@ public class DragAndDrop {
                     viewDrag = v;
 
                     if (onDragAndDropListener != null)  {
-                        onDragAndDropListener.onObjectTouch(viewDrag, v.getX(), v.getY());
+                        onDragAndDropListener.onObjectTouch(viewRoot, viewDrag, v.getX(), v.getY());
                     }
 
                     break;
@@ -249,15 +253,19 @@ public class DragAndDrop {
     }
 
     //Вызываем из класса в котором устанавливаем слушатель
-    public void setDragListener(OnDragAndDropListener l) {
+    public void setOnDragListener(OnDragAndDropListener l) {
         this.onDragAndDropListener = l;
+    }
+
+    public void removeOnDragListener() {
+        this.onDragAndDropListener = null;
     }
 
     //функция возврата реализуемая в главном классе
     public interface OnDragAndDropListener {
-        void onObjectTouch(View viewDrag, float x, float y);
-        void onObjectDrag(List<View> overlapViewList, View viewDrag, float x, float y);
-        void onObjectDrop(List<View> overlapViewList, View viewDrag, float x, float y);
+        void onObjectTouch(View viewRoot, View viewDrag, float x, float y);
+        void onObjectDrag(View viewRoot, List<View> overlapViewList, View viewDrag, float x, float y);
+        void onObjectDrop(View viewRoot, List<View> overlapViewList, View viewDrag, float x, float y);
     }
 
     //

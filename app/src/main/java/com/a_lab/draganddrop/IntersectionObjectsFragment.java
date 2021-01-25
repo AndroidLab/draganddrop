@@ -56,7 +56,7 @@ public class IntersectionObjectsFragment extends Fragment implements DragAndDrop
         super.onActivityCreated(savedInstanceState);
 
         dragAndDrop = new DragAndDrop(getActivity(), flIntersectionObjects);
-        dragAndDrop.setDragListener(this);
+        dragAndDrop.setOnDragListener(this);
 
         dragAndDrop.addViewDrag(ivRed);
         dragAndDrop.addViewDrag(ivGreen);
@@ -65,7 +65,7 @@ public class IntersectionObjectsFragment extends Fragment implements DragAndDrop
     }
 
     @Override
-    public void onObjectTouch(View viewDrag, float x, float y) {
+    public void onObjectTouch(View viewRoot, View viewDrag, float x, float y) {
         if (viewDrag.getId() == R.id.ivRed)
             Toast.makeText(getActivity(), "Start drag red", Toast.LENGTH_SHORT).show();
         if (viewDrag.getId() == R.id.ivGreen)
@@ -75,7 +75,7 @@ public class IntersectionObjectsFragment extends Fragment implements DragAndDrop
     }
 
     @Override
-    public void onObjectDrag(List<View> overlapViewList, View viewDrag, float x, float y) {
+    public void onObjectDrag(View viewRoot, List<View> overlapViewList, View viewDrag, float x, float y) {
         if (viewDrag.getId() == R.id.ivRed)
             tvRedCoordinates.setText("Red x: " + (int) x + ", y: " + (int) y);
         if (viewDrag.getId() == R.id.ivGreen)
@@ -85,7 +85,7 @@ public class IntersectionObjectsFragment extends Fragment implements DragAndDrop
     }
 
     @Override
-    public void onObjectDrop(List<View> overlapViewList, View viewDrag, float x, float y) {
+    public void onObjectDrop(View viewRoot, List<View> overlapViewList, View viewDrag, float x, float y) {
         List<String> intersections = new ArrayList<>();
 
         if (!overlapViewList.isEmpty())

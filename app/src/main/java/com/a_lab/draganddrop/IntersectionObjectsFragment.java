@@ -2,6 +2,7 @@ package com.a_lab.draganddrop;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +76,8 @@ public class IntersectionObjectsFragment extends Fragment implements DragAndDrop
     }
 
     @Override
-    public void onObjectDrag(View viewRoot, List<View> overlapViewList, View viewDrag, float x, float y) {
+    public void onObjectDrag(View viewRoot, List<View> overlapViewList, List<View> overlapWithTouchPointViewList, View viewDrag, float x, float y) {
+        //Log.d("myL", "" + overlapWithTouchPointViewList);
         if (viewDrag.getId() == R.id.ivRed)
             tvRedCoordinates.setText("Red x: " + (int) x + ", y: " + (int) y);
         if (viewDrag.getId() == R.id.ivGreen)
@@ -85,8 +87,10 @@ public class IntersectionObjectsFragment extends Fragment implements DragAndDrop
     }
 
     @Override
-    public void onObjectDrop(View viewRoot, List<View> overlapViewList, View viewDrag, float x, float y) {
+    public void onObjectDrop(View viewRoot, List<View> overlapViewList, List<View> overlapWithTouchPointViewList, View viewDrag, float x, float y) {
         List<String> intersections = new ArrayList<>();
+        Log.d("myL", "" + overlapViewList);
+        Log.d("myL", "" + overlapWithTouchPointViewList);
 
         if (!overlapViewList.isEmpty())
             for (View overlapView : overlapViewList)

@@ -12,9 +12,10 @@ import java.util.List;
 
 public class DragAndDrop {
 
-    private static final int CLICK_TIME = 1000;
+    private static final int CLICK_TIME = 750;
+    private static final String GLOBAL_VISIBLE_RECT_METHOD = "globalVisibleRect";
+    private static final String HIT_RECT_METHOD = "hitRect";
 
-    private final Activity activity;
     private final List<View> viewList = new ArrayList<>();
     private final List<View> viewDisableClickList = new ArrayList<>();
     private final HashMap<View, DragAndDrop.OnClickListener> clickListenerMap = new HashMap<>();
@@ -24,15 +25,17 @@ public class DragAndDrop {
     private boolean isFrameHard = false;   //Если жесткие рамки экрана
     private boolean isReturnBack = false;   //Всегда возвращать на исходную позицию
     private long timerClick;
+    private String detectRectMethod = HIT_RECT_METHOD;
 
     public DragAndDrop(Activity activity) {
         this(activity, null);
     }
 
     public DragAndDrop(Activity activity, View viewRoot) {
-        this.activity = activity;
+        this(activity, viewRoot, null);
+    }
 
-
+    public DragAndDrop(Activity activity, View viewRoot, String detectRectMethod) {
         //Устанавливаем слушатель touch на root
         if (viewRoot == null)
             this.viewRoot = activity.findViewById(android.R.id.content).getRootView();
@@ -40,6 +43,9 @@ public class DragAndDrop {
             this.viewRoot = viewRoot;
 
         this.viewRoot.setOnTouchListener(touchListenerRoot);
+
+        if (detectRectMethod != null)
+            this.detectRectMethod = detectRectMethod;
     }
 
     //Добавляем объекты target
@@ -88,12 +94,21 @@ public class DragAndDrop {
         viewDisableClickList.remove(view);   //Удаляем из списка объектов, у котрых нужно отключать clickable
     }
 
+    public void setDetectionRectMethod(String method) {
+        detectRectMethod = method;
+    }
+
+    public List<View> getViewList() {
+        return viewList;
+    }
+
     private final View.OnTouchListener touchListenerRoot = new View.OnTouchListener() {
         private int screenWidth, screenHeight;
         private float startViewDragX, startViewDragY;
         private final List<View> targetViewList = new ArrayList<>();
         private final List<Rect> targetRectList = new ArrayList<>();
         private final List<View> overlapViewList = new ArrayList<>();
+        private final List<View> overlapWithTouchPointViewList = new ArrayList<>();
 
         @Override
         public boolean onTouch(View v, MotionEvent event)
@@ -118,7 +133,11 @@ public class DragAndDrop {
                             //Если view таргета не равна viewDrag
                             if (targetView != viewDrag) {
                                 Rect targetRect = new Rect();
-                                targetView.getGlobalVisibleRect(targetRect);
+                                if (detectRectMethod.equals(HIT_RECT_METHOD))
+                                    targetView.getHitRect(targetRect);
+                                else
+                                    targetView.getGlobalVisibleRect(targetRect);
+
                                 targetViewList.add(targetView);   //Записываем view таргета
                                 targetRectList.add(targetRect);   //Записываем расположение таргета
                             }
@@ -127,17 +146,21 @@ public class DragAndDrop {
                         break;
 
                     case MotionEvent.ACTION_MOVE:
+                        overlapViewList.clear();   //Должно очищаться здесь
+                        overlapWithTouchPointViewList.clear();   //Должно очищаться здесь
+
                         //Если время клика равно 0 или текущее время больше чем время клика + 1 сек
                         if (timerClick == 0 || System.currentTimeMillis() > timerClick + CLICK_TIME) {
-
-                            overlapViewList.clear();   //Должно очищаться здесь
 
                             float touchX = event.getX();   //Точка касания X
                             float touchY = event.getY();   //Точка касания Y
 
                             //Получаем ректангл перетаскиваемого view
                             Rect dragRect = new Rect();
-                            viewDrag.getGlobalVisibleRect(dragRect);
+                            if (detectRectMethod.equals(HIT_RECT_METHOD))
+                                viewDrag.getHitRect(dragRect);
+                            else
+                                viewDrag.getGlobalVisibleRect(dragRect);
 
                             //Перебираем все ректанглы таргета
                             for(int i = 0; i < targetRectList.size(); i++)
@@ -145,15 +168,23 @@ public class DragAndDrop {
                                 View targetView = targetViewList.get(i);   //View таргета
                                 Rect targetRect = targetRectList.get(i);   //Позиция таргета
 
+
+
                                 //Если ректанглы объектов НЕ пересекаются по оси X и Y
                                 if ( !(targetRect.left > dragRect.right || targetRect.right < dragRect.left)
                                         && !(targetRect.bottom < dragRect.top || targetRect.top > dragRect.bottom) ) {
                                     overlapViewList.add(targetView);
                                 }
+
+                                if (targetRect.left < dragRect.centerX() && targetRect.right > dragRect.centerX()
+                                        && targetRect.top < dragRect.centerY() && targetRect.bottom > dragRect.centerY()) {
+                                    overlapWithTouchPointViewList.add(targetView);
+                                }
+
                             }
 
                             if (onDragAndDropListener != null)  {
-                                onDragAndDropListener.onObjectDrag(viewRoot, overlapViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
+                                onDragAndDropListener.onObjectDrag(viewRoot, overlapViewList, overlapWithTouchPointViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
                             }
 
                             //Если жесткие рамки экрана
@@ -190,7 +221,7 @@ public class DragAndDrop {
                         }
 
                         if (onDragAndDropListener != null)  {
-                            onDragAndDropListener.onObjectDrop(viewRoot, overlapViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
+                            onDragAndDropListener.onObjectDrop(viewRoot, overlapViewList, overlapWithTouchPointViewList, viewDrag, viewDrag.getX(), viewDrag.getY());
                         }
 
                         viewDrag = null;
@@ -264,8 +295,8 @@ public class DragAndDrop {
     //функция возврата реализуемая в главном классе
     public interface OnDragAndDropListener {
         void onObjectTouch(View viewRoot, View viewDrag, float x, float y);
-        void onObjectDrag(View viewRoot, List<View> overlapViewList, View viewDrag, float x, float y);
-        void onObjectDrop(View viewRoot, List<View> overlapViewList, View viewDrag, float x, float y);
+        void onObjectDrag(View viewRoot, List<View> overlapViewList, List<View> overlapWithTouchPointViewList, View viewDrag, float x, float y);
+        void onObjectDrop(View viewRoot, List<View> overlapViewList, List<View> overlapWithTouchPointViewList, View viewDrag, float x, float y);
     }
 
     //

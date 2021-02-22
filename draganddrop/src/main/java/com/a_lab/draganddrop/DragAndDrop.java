@@ -12,9 +12,9 @@ import java.util.List;
 
 public class DragAndDrop {
 
+    public static final String GLOBAL_VISIBLE_RECT_METHOD = "globalVisibleRect";
+    public static final String HIT_RECT_METHOD = "hitRect";
     private static final int CLICK_TIME = 750;
-    private static final String GLOBAL_VISIBLE_RECT_METHOD = "globalVisibleRect";
-    private static final String HIT_RECT_METHOD = "hitRect";
 
     private final List<View> viewList = new ArrayList<>();
     private final List<View> viewDisableClickList = new ArrayList<>();
@@ -78,6 +78,7 @@ public class DragAndDrop {
 
     //Удаляем объект target
     public void removeViewDrag(View view) {
+        view.setOnTouchListener(null);
         viewList.remove(view);
     }
 

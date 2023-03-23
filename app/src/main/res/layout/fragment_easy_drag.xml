@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/flEasyDrag"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/easy_drag"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_margin="50dp"/>
+    <FrameLayout
+        android:id="@+id/easyDragLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <include layout="@layout/drag_objects"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/easy_drag"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="50dp"/>
 
-</FrameLayout>
+        <include
+            android:id="@+id/dragObjects"
+            layout="@layout/drag_objects"/>
+
+    </FrameLayout>
+
+</layout>

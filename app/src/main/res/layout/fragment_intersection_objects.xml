@@ -1,64 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/flIntersectionObjects"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/intersection_objects"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_margin="50dp"/>
-
-    <ImageView
-        android:id="@+id/ivBlack"
-        android:layout_width="@dimen/iv_size"
-        android:layout_height="@dimen/iv_size"
-        android:background="@color/black"
-        android:layout_gravity="center"
-        android:layout_marginTop="150dp"
-        android:tag="black"/>
-
-    <include layout="@layout/drag_objects"/>
-
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/intersectionObjectsLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tvRedCoordinates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/red"
-            android:text="Red x: -, y: -"
-            android:layout_margin="10dp"/>
+            android:text="@string/intersection_objects"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="50dp"/>
 
-        <TextView
-            android:id="@+id/tvGreenCoordinates"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/blackImage"
+            android:layout_width="@dimen/iv_size"
+            android:layout_height="@dimen/iv_size"
+            android:background="@color/black"
+            android:layout_gravity="center"
+            android:layout_marginTop="150dp"
+            android:tag="black"/>
+
+        <include
+            android:id="@+id/dragObjects"
+            layout="@layout/drag_objects"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/green"
-            android:text="Green x: -, y: -"
-            android:layout_marginHorizontal="10dp"/>
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvBlueCoordinates"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/blue"
-            android:text="Blue x: -, y: -"
-            android:layout_margin="10dp"/>
+            <TextView
+                android:id="@+id/redCoordinates"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/red"
+                android:text="Red x: -, y: -"
+                android:layout_margin="10dp"/>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/greenCoordinates"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/green"
+                android:text="Green x: -, y: -"
+                android:layout_marginHorizontal="10dp"/>
 
-</FrameLayout>
+            <TextView
+                android:id="@+id/blueCoordinates"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/blue"
+                android:text="Blue x: -, y: -"
+                android:layout_margin="10dp"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>

@@ -12,19 +12,19 @@
         android:label="LoginFragment"
         tools:layout="@layout/fragment_main">
         <action
-            android:id="@+id/actionMainFragmentToEasyDragFragment"
+            android:id="@+id/toEasyDragFragment"
             app:destination="@id/easyDragFragment" />
         <action
-            android:id="@+id/actionMainFragmentToReturnBackAndFrameHardFragment"
+            android:id="@+id/toReturnBackAndFrameHardFragment"
             app:destination="@id/returnBackAndFrameHardFragment" />
         <action
-            android:id="@+id/actionMainFragmentToTouchConflictFragment"
+            android:id="@+id/toTouchConflictFragment"
             app:destination="@id/touchConflictFragment" />
         <action
-            android:id="@+id/actionMainFragmentToClickListenerFragment"
+            android:id="@+id/toClickListenerFragment"
             app:destination="@id/clickListenerFragment" />
         <action
-            android:id="@+id/actionMainFragmentToIintersectionObjectsFragment"
+            android:id="@+id/toIntersectionObjectsFragment"
             app:destination="@id/intersectionObjectsFragment" />
     </fragment>
 

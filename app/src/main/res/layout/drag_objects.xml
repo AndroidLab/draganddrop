@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/ivRed"
+        android:id="@+id/redImage"
         android:layout_width="@dimen/iv_size"
         android:layout_height="@dimen/iv_size"
         android:background="@color/red"
@@ -14,7 +14,7 @@
         android:tag="red"/>
 
     <ImageView
-        android:id="@+id/ivGreen"
+        android:id="@+id/greenImage"
         android:layout_width="@dimen/iv_size"
         android:layout_height="@dimen/iv_size"
         android:background="@color/green"
@@ -23,7 +23,7 @@
         android:tag="green"/>
 
     <ImageView
-        android:id="@+id/ivBlue"
+        android:id="@+id/blueImage"
         android:layout_width="@dimen/iv_size"
         android:layout_height="@dimen/iv_size"
         android:background="@color/blue"

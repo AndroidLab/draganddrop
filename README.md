@@ -1,4 +1,4 @@
-# DragAndDrop ![Download](https://api.bintray.com/packages/winged90/maven/draganddrop/images/download.svg?version=1.0.2)
+# DragAndDrop
 Easy to use drag and drop for android
 # Preview
 1\. Eassy drag
@@ -22,9 +22,18 @@ Easy to use drag and drop for android
 ![easy_drag](./app/assets/gif/intersection_objects.gif)
 
 # To get a Git project into your build:
-
+Add it in your root build.gradle at the end of repositories
 ```
-dependencies {
-	        implementation 'io.github.a.lab.develop:draganddrop:1.0.5'
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
 	}
+}
+```
+```
+Add the dependency
+dependencies {
+	implementation 'com.github.AndroidLab:draganddrop:1.0.6'
+}
 ```

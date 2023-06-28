@@ -31,8 +31,8 @@ allprojects {
 	}
 }
 ```
-```
 Add the dependency
+```
 dependencies {
 	implementation 'com.github.AndroidLab:draganddrop:1.0.6'
 }
